@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Travel Guide - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+            background-color: #f3f4f6;
+            color: #334155;
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, #1e293b 0%, #334155 100%);
+            color: white;
+            padding: 20px 0;
+            height: 100vh;
+            position: fixed;
+            overflow-y: auto;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            padding: 12px 20px;
+            margin: 5px 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar a:hover, .sidebar a.active {
+            background: rgba(59, 130, 246, 0.2);
+            color: white;
+        }
+        
+        .sidebar a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .navbar {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .card h3 {
+            font-size: 1.8rem;
+            margin: 0;
+            color: #1e293b;
+        }
+        
+        .card p {
+            color: #64748b;
+            margin: 5px 0 0;
+        }
+        
+        .dashboard-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+        
+        .dashboard-section h2 {
+            margin-top: 0;
+            color: #1e293b;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #475569;
+        }
+        
+        tr:hover {
+            background: #f1f5f9;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            height: 300px;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+                padding: 15px 0;
+            }
+            
+            .sidebar span {
+                display: none;
+            }
+            
+            .sidebar a i {
+                margin-right: 0;
+                font-size: 1.2rem;
+            }
+            
+            .sidebar-header h2 {
+                display: none;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+            }
+        }
+        
+        /* Validation Styles */
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .input-error {
+            border-color: #ef4444 !important;
+        }
+        
+        .success-message {
+            color: #10b981;
+            font-size: 0.875rem;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+        
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Dashboard -->
+    <div id="adminPanel">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2 class="text-xl font-bold">Virtual Travel Guide</h2>
+                <p class="text-sm text-gray-400">Admin Panel</p>
+            </div>
+            
+            <a href="dashboard.html" class="active">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="destinations.html">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Destinations</span>
+            </a>
+            <a href="categories.html">
+                <i class="fas fa-list"></i>
+                <span>Categories</span>
+            </a>
+            <a href="users.html">
+                <i class="fas fa-users"></i>
+                <span>Users</span>
+            </a>
+            <a href="settings.html">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+            <a href="#" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Navbar -->
+            <div class="navbar">
+                <h1>Dashboard</h1>
+                <div class="flex items-center">
+                    <span class="text-gray-600 mr-4">Welcome, Admin</span>
+                    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Section -->
+            <div class="dashboard-section">
+                <h2>Overview</h2>
+                <div class="cards">
+                    <div class="card">
+                        <div class="card-icon bg-blue-100 text-blue-600">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <h3 id="destCount">3</h3>
+                        <p>Total Destinations</p>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-icon bg-green-100 text-green-600">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3 id="userCount">3</h3>
+                        <p>Registered Users</p>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-icon bg-amber-100 text-amber-600">
+                            <i class="fas fa-list"></i>
+                        </div>
+                        <h3 id="catCount">6</h3>
+                        <p>Categories</p>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-icon bg-purple-100 text-purple-600">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <h3>1.2K</h3>
+                        <p>Monthly Views</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                    <div class="chart-container">
+                        <h3 class="text-lg font-semibold mb-4">Monthly Visitors</h3>
+                        <div class="h-64 flex items-end justify-between pt-4 pb-2">
+                            <div class="flex flex-col items-center">
+                                <div class="w-8 bg-blue-500 rounded-t" style="height: 120px;"></div>
+                                <span class="text-xs mt-1">Jan</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="w-8 bg-blue-500 rounded-t" style="height: 160px;"></div>
+                                <span class="text-xs mt-1">Feb</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="w-8 bg-blue-500 rounded-t" style="height: 200px;"></div>
+                                <span class="text-xs mt-1">Mar</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="w-8 bg-blue-500 rounded-t" style="height: 180px;"></div>
+                                <span class="text-xs mt-1">Apr</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="w-8 bg-blue-500 rounded-t" style="height: 220px;"></div>
+                                <span class="text-xs mt-1">May</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="w-8 bg-blue-500 rounded-t" style="height: 240px;"></div>
+                                <span class="text-xs mt-1">Jun</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h3 class="text-lg font-semibold mb-4">Content Popularity</h3>
+                        <div class="h-64 flex items-end justify-between pt-4 pb-2">
+                            <div class="flex flex-col items-center">
+                                <div class="w-8 bg-green-500 rounded-t" style="height: 180px;"></div>
+                                <span class="text-xs mt-1">Cities</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="w-8 bg-green-500 rounded-t" style="height: 220px;"></div>
+                                <span class="text-xs mt-1">Beaches</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="w-8 bg-green-500 rounded-t" style="height: 160px;"></div>
+                                <span class="text-xs mt-1">Mountains</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="w-8 bg-green-500 rounded-t" style="height: 140px;"></div>
+                                <span class="text-xs mt-1">Historical</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="w-8 bg-green-500 rounded-t" style="height: 200px;"></div>
+                                <span class="text-xs mt-1">Cultural</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="w-8 bg-green-500 rounded-t" style="height: 120px;"></div>
+                                <span class="text-xs mt-1">Adventure</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="mt-6">Recent Activities</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Action</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentActivities">
+                        <tr>
+                            <td>John Doe</td>
+                            <td>Viewed Paris destination</td>
+                            <td>2 hours ago</td>
+                        </tr>
+                        <tr>
+                            <td>Admin</td>
+                            <td>Added new destination: Santorini</td>
+                            <td>5 hours ago</td>
+                        </tr>
+                        <tr>
+                            <td>Jane Smith</td>
+                            <td>Created new account</td>
+                            <td>Yesterday</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Destination Modal -->
+    <div id="addDestinationModal" class="modal">
+        <div class="modal-content">
+            <h2 class="text-xl font-bold mb-4">Add New Destination</h2>
+            <form id="destinationForm">
+                <div class="form-group">
+                    <label for="destName">Destination Name</label>
+                    <input type="text" id="destName" name="destName" required>
+                    <div id="destNameError" class="error-message">Destination name is required</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="destCategory">Category</label>
+                    <select id="destCategory" name="destCategory" required>
+                        <option value="">Select a category</option>
+                        <option value="Cities">Cities</option>
+                        <option value="Beaches">Beaches</option>
+                        <option value="Mountains">Mountains</option>
+                        <option value="Historical">Historical</option>
+                        <option value="Cultural">Cultural</option>
+                        <option value="Adventure">Adventure</option>
+                    </select>
+                    <div id="destCategoryError" class="error-message">Please select a category</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="destViews">Views</label>
+                    <input type="number" id="destViews" name="destViews" min="0" required>
+                    <div id="destViewsError" class="error-message">Please enter a valid number of views</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="destRating">Rating (1-5)</label>
+                    <input type="number" id="destRating" name="destRating" min="1" max="5" step="0.1" required>
+                    <div id="destRatingError" class="error-message">Rating must be between 1 and 5</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="destDescription">Description</label>
+                    <textarea id="destDescription" name="destDescription"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addDestinationModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Destination</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Data storage
+        let destinations = JSON.parse(localStorage.getItem("destinations")) || [
+            { name: "Paris, France", category: "Cities", views: 1240, rating: 4.8 },
+            { name: "Santorini, Greece", category: "Beaches", views: 980, rating: 4.7 },
+            { name: "Kyoto, Japan", category: "Cultural", views: 1550, rating: 4.9 }
+        ];
+        
+        let categories = JSON.parse(localStorage.getItem("categories")) || [
+            { name: "Cities", icon: "fas fa-city", count: 12 },
+            { name: "Beaches", icon: "fas fa-umbrella-beach", count: 8 },
+            { name: "Mountains", icon: "fas fa-mountain", count: 10 },
+            { name: "Historical", icon: "fas fa-landmark", count: 15 },
+            { name: "Cultural", icon: "fas fa-theater-masks", count: 9 },
+            { name: "Adventure", icon: "fas fa-hiking", count: 7 }
+        ];
+        
+        // Check if user is logged in
+        function checkAuth() {
+            if (localStorage.getItem("isLoggedIn") !== "true") {
+                window.location.href = "login.html";
+            }
+        }
+        
+        // Load data into dashboard
+        function loadData() {
+            // Update counts
+            document.getElementById("destCount").textContent = destinations.length;
+            document.getElementById("userCount").textContent = 3; // Hardcoded for now
+            document.getElementById("catCount").textContent = categories.length;
+        }
+        
+        // Logout function
+        function logout() {
+            if (confirm("Are you sure you want to logout?")) {
+                localStorage.removeItem("isLoggedIn");
+                window.location.href = "login.html";
+            }
+        }
+        
+        // Validation functions
+        function validateRequired(value) {
+            return value && value.trim() !== '';
+        }
+        
+        function validateNumber(value, min = 0, max = Infinity) {
+            const num = parseFloat(value);
+            return !isNaN(num) && num >= min && num <= max;
+        }
+        
+        function validateRating(value) {
+            return validateNumber(value, 1, 5);
+        }
+        
+        function showError(inputId, errorId, message) {
+            const input = document.getElementById(inputId);
+            const error = document.getElementById(errorId);
+            
+            input.classList.add('input-error');
+            error.textContent = message;
+            error.style.display = 'block';
+        }
+        
+        function clearError(inputId, errorId) {
+            const input = document.getElementById(inputId);
+            const error = document.getElementById(errorId);
+            
+            input.classList.remove('input-error');
+            error.style.display = 'none';
+        }
+        
+        // Destination form validation
+        function validateDestinationForm() {
+            let isValid = true;
+            
+            // Validate destination name
+            const destName = document.getElementById('destName').value;
+            if (!validateRequired(destName)) {
+                showError('destName', 'destNameError', 'Destination name is required');
+                isValid = false;
+            } else {
+                clearError('destName', 'destNameError');
+            }
+            
+            // Validate category
+            const destCategory = document.getElementById('destCategory').value;
+            if (!validateRequired(destCategory)) {
+                showError('destCategory', 'destCategoryError', 'Please select a category');
+                isValid = false;
+            } else {
+                clearError('destCategory', 'destCategoryError');
+            }
+            
+            // Validate views
+            const destViews = document.getElementById('destViews').value;
+            if (!validateNumber(destViews, 0)) {
+                showError('destViews', 'destViewsError', 'Please enter a valid number of views');
+                isValid = false;
+            } else {
+                clearError('destViews', 'destViewsError');
+            }
+            
+            // Validate rating
+            const destRating = document.getElementById('destRating').value;
+            if (!validateRating(destRating)) {
+                showError('destRating', 'destRatingError', 'Rating must be between 1 and 5');
+                isValid = false;
+            } else {
+                clearError('destRating', 'destRatingError');
+            }
+            
+            return isValid;
+        }
+        
+        // Handle destination form submission
+        document.getElementById('destinationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (validateDestinationForm()) {
+                // Get form values
+                const destName = document.getElementById('destName').value;
+                const destCategory = document.getElementById('destCategory').value;
+                const destViews = parseInt(document.getElementById('destViews').value);
+                const destRating = parseFloat(document.getElementById('destRating').value);
+                const destDescription = document.getElementById('destDescription').value;
+                
+                // Create new destination object
+                const newDestination = {
+                    name: destName,
+                    category: destCategory,
+                    views: destViews,
+                    rating: destRating,
+                    description: destDescription
+                };
+                
+                // Add to destinations array
+                destinations.push(newDestination);
+                
+                // Save to localStorage
+                localStorage.setItem("destinations", JSON.stringify(destinations));
+                
+                // Update UI
+                loadData();
+                
+                // Add to recent activities
+                addRecentActivity('Admin', `Added new destination: ${destName}`, 'Just now');
+                
+                // Close modal and reset form
+                closeModal('addDestinationModal');
+                this.reset();
+                
+                // Show success message
+                alert('Destination added successfully!');
+            }
+        });
+        
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            // Reset any validation errors
+            const errors = document.querySelectorAll('.error-message');
+            errors.forEach(error => {
+                error.style.display = 'none';
+            });
+            
+            const inputs = document.querySelectorAll('.input-error');
+            inputs.forEach(input => {
+                input.classList.remove('input-error');
+            });
+        }
+        
+        // Add recent activity
+        function addRecentActivity(user, action, time) {
+            const activitiesTable = document.getElementById('recentActivities');
+            const newRow = document.createElement('tr');
+            
+            newRow.innerHTML = `
+                <td>${user}</td>
+                <td>${action}</td>
+                <td>${time}</td>
+            `;
+            
+            // Add to the top of the table
+            activitiesTable.insertBefore(newRow, activitiesTable.firstChild);
+            
+            // Limit to 10 recent activities
+            if (activitiesTable.children.length > 10) {
+                activitiesTable.removeChild(activitiesTable.lastChild);
+            }
+        }
+        
+        // Initialize the dashboard
+        checkAuth();
+        loadData();
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modals = document.getElementsByClassName('modal');
+            for (let modal of modals) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+</html>

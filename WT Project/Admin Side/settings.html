@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Travel Guide - Settings</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+            background-color: #f3f4f6;
+            color: #334155;
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, #1e293b 0%, #334155 100%);
+            color: white;
+            padding: 20px 0;
+            height: 100vh;
+            position: fixed;
+            overflow-y: auto;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            padding: 12px 20px;
+            margin: 5px 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar a:hover, .sidebar a.active {
+            background: rgba(59, 130, 246, 0.2);
+            color: white;
+        }
+        
+        .sidebar a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .navbar {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .dashboard-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+        
+        .dashboard-section h2 {
+            margin-top: 0;
+            color: #1e293b;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #059669;
+        }
+        
+        .btn-success:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 4px;
+            display: none;
+        }
+        
+        .form-control.error {
+            border-color: #ef4444;
+        }
+        
+        .success-message {
+            background: #10b981;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+                padding: 15px 0;
+            }
+            
+            .sidebar span {
+                display: none;
+            }
+            
+            .sidebar a i {
+                margin-right: 0;
+                font-size: 1.2rem;
+            }
+            
+            .sidebar-header h2 {
+                display: none;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Dashboard -->
+    <div id="adminPanel">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2 class="text-xl font-bold">Virtual Travel Guide</h2>
+                <p class="text-sm text-gray-400">Admin Panel</p>
+            </div>
+            
+            <a href="dashboard.html">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="destinations.html">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Destinations</span>
+            </a>
+            <a href="categories.html">
+                <i class="fas fa-list"></i>
+                <span>Categories</span>
+            </a>
+            <a href="users.html">
+                <i class="fas fa-users"></i>
+                <span>Users</span>
+            </a>
+            <a href="settings.html" class="active">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+            <a href="#" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Navbar -->
+            <div class="navbar">
+                <h1>Settings</h1>
+                <div class="flex items-center">
+                    <span class="text-gray-600 mr-4">Welcome, Admin</span>
+                    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Success Message -->
+            <div id="successMessage" class="success-message">
+                Settings saved successfully!
+            </div>
+
+            <!-- Settings Section -->
+            <div class="dashboard-section">
+                <h2>System Settings</h2>
+                
+                <form id="settingsForm">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <div class="form-group">
+                                <label for="siteName">Site Name</label>
+                                <input type="text" id="siteName" class="form-control" value="Virtual Travel Guide">
+                                <div id="siteNameError" class="error-message">Site name is required and must be at least 3 characters long.</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="adminEmail">Admin Email</label>
+                                <input type="email" id="adminEmail" class="form-control" value="admin@virtualtravelguide.com">
+                                <div id="adminEmailError" class="error-message">Please enter a valid email address.</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="itemsPerPage">Items Per Page</label>
+                                <select id="itemsPerPage" class="form-control">
+                                    <option value="10">10</option>
+                                    <option value="25" selected>25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="form-group">
+                                <label for="siteDescription">Site Description</label>
+                                <textarea id="siteDescription" class="form-control" rows="3">Explore the world from the comfort of your home through immersive virtual experiences.</textarea>
+                                <div id="siteDescriptionError" class="error-message">Site description must be between 10 and 500 characters.</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="maintenanceMode">Maintenance Mode</label>
+                                <select id="maintenanceMode" class="form-control">
+                                    <option value="off" selected>Off</option>
+                                    <option value="on">On</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" id="saveButton" class="btn btn-success mt-4">Save Settings</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is logged in
+        function checkAuth() {
+            if (localStorage.getItem("isLoggedIn") !== "true") {
+                window.location.href = "login.html";
+            }
+        }
+        
+        // Logout function
+        function logout() {
+            if (confirm("Are you sure you want to logout?")) {
+                localStorage.removeItem("isLoggedIn");
+                window.location.href = "login.html";
+            }
+        }
+        
+        // Form validation and submission
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('settingsForm');
+            const saveButton = document.getElementById('saveButton');
+            const successMessage = document.getElementById('successMessage');
+            
+            // Validation rules
+            const validators = {
+                siteName: {
+                    validate: (value) => value.length >= 3 && value.length <= 100,
+                    errorMessage: 'Site name must be between 3 and 100 characters.'
+                },
+                adminEmail: {
+                    validate: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+                    errorMessage: 'Please enter a valid email address.'
+                },
+                siteDescription: {
+                    validate: (value) => value.length >= 10 && value.length <= 500,
+                    errorMessage: 'Site description must be between 10 and 500 characters.'
+                }
+            };
+            
+            // Validate individual field
+            function validateField(fieldId) {
+                const field = document.getElementById(fieldId);
+                const errorElement = document.getElementById(fieldId + 'Error');
+                const validator = validators[fieldId];
+                
+                if (!validator) return true; // No validator for this field
+                
+                const isValid = validator.validate(field.value);
+                
+                if (!isValid) {
+                    field.classList.add('error');
+                    errorElement.textContent = validator.errorMessage;
+                    errorElement.style.display = 'block';
+                } else {
+                    field.classList.remove('error');
+                    errorElement.style.display = 'none';
+                }
+                
+                return isValid;
+            }
+            
+            // Validate entire form
+            function validateForm() {
+                let isValid = true;
+                
+                for (const fieldId in validators) {
+                    if (!validateField(fieldId)) {
+                        isValid = false;
+                    }
+                }
+                
+                return isValid;
+            }
+            
+            // Show success message
+            function showSuccessMessage() {
+                successMessage.style.display = 'block';
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 3000);
+            }
+            
+            // Handle form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (validateForm()) {
+                    // Disable save button to prevent multiple submissions
+                    saveButton.disabled = true;
+                    saveButton.textContent = 'Saving...';
+                    
+                    // Simulate API call with timeout
+                    setTimeout(() => {
+                        // In a real application, you would send the data to a server here
+                        console.log('Settings saved:', {
+                            siteName: document.getElementById('siteName').value,
+                            adminEmail: document.getElementById('adminEmail').value,
+                            itemsPerPage: document.getElementById('itemsPerPage').value,
+                            siteDescription: document.getElementById('siteDescription').value,
+                            maintenanceMode: document.getElementById('maintenanceMode').value
+                        });
+                        
+                        // Show success message
+                        showSuccessMessage();
+                        
+                        // Re-enable save button
+                        saveButton.disabled = false;
+                        saveButton.textContent = 'Save Settings';
+                    }, 1000);
+                }
+            });
+            
+            // Real-time validation on input
+            document.getElementById('siteName').addEventListener('input', function() {
+                validateField('siteName');
+            });
+            
+            document.getElementById('adminEmail').addEventListener('input', function() {
+                validateField('adminEmail');
+            });
+            
+            document.getElementById('siteDescription').addEventListener('input', function() {
+                validateField('siteDescription');
+            });
+            
+            // Initialize the settings page
+            checkAuth();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact Us - Virtual Travel Guide</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/2f97fc9c53.js" crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --secondary: #10b981;
+      --accent: #f59e0b;
+      --dark: #1e293b;
+      --light: #f8fafc;
+    }
+    
+    html { 
+      scroll-behavior: smooth; 
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      color: #334155;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    #backToTop {
+      position: fixed; 
+      bottom: 20px; 
+      right: 20px; 
+      display: none; 
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+    
+    .navbar-glass {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .card-glass {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .card-glass:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    .hero-overlay {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(59, 130, 246, 0.75) 100%);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, #2563eb 100%);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+    }
+    
+    .btn-secondary {
+      background: linear-gradient(135deg, var(--secondary) 0%, #059669 100%);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+    }
+    
+    .section-title {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 3rem;
+    }
+    
+    .section-title:after {
+      content: '';
+      position: absolute;
+      width: 60%;
+      height: 4px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      bottom: -10px;
+      left: 20%;
+      border-radius: 2px;
+    }
+    
+    .contact-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+      font-size: 1.8rem;
+      color: #3b82f6;
+    }
+    
+    .form-input {
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      padding: 1rem;
+      width: 100%;
+      transition: all 0.3s ease;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: #374151;
+    }
+    
+    .floating {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-12px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    /* Validation styles */
+    .border-red-500 {
+      border-color: #ef4444 !important;
+    }
+    
+    .border-green-500 {
+      border-color: #10b981 !important;
+    }
+    
+    .error-message {
+      animation: fadeIn 0.3s ease-in;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar-glass p-4 sticky top-0 z-50 rounded-b-xl">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-green-500 hover:scale-105 transition-transform duration-300 flex items-center">
+        <i class="fas fa-globe-americas mr-2"></i> Virtual Travel Guide
+      </div>
+      <ul class="hidden md:flex space-x-8 text-gray-700 font-medium">
+        <li><a href="index.html" class="hover:text-blue-500 transition duration-300 relative group">Home
+          <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
+        </a></li>
+        <li><a href="categories.html" class="hover:text-blue-500 transition duration-300 relative group">Categories
+          <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
+        </a></li>
+        <li><a href="search.html" class="hover:text-blue-500 transition duration-300 relative group">Search
+          <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
+        </a></li>
+        <li><a href="contact.html" class="text-blue-500 transition duration-300 relative group">Contact
+          <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500"></span>
+        </a></li>
+      </ul>
+      <div class="hidden md:flex space-x-4">
+        <a href="login.html" class="px-4 py-2 border border-blue-500 rounded-full text-blue-500 hover:bg-blue-500 hover:text-white transition-all duration-300 flex items-center">
+          <i class="fas fa-sign-in-alt mr-2"></i> Login
+        </a>
+        <a href="signup.html" class="px-4 py-2 btn-primary text-white rounded-full shadow hover:scale-105 transition-all duration-300 flex items-center">
+          <i class="fas fa-user-plus mr-2"></i> Signup
+        </a>
+      </div>
+      <div class="md:hidden">
+        <button id="menuBtn" class="text-2xl text-blue-600">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="md:hidden hidden px-4 pt-2 pb-4 bg-white/95 shadow-lg rounded-xl mt-2 backdrop-blur-md">
+      <ul class="space-y-3 text-gray-700">
+        <li><a href="index.html" class="block hover:text-blue-500 py-2 px-2 rounded-lg hover:bg-blue-50 transition duration-300 flex items-center">
+          <i class="fas fa-home mr-3"></i> Home
+        </a></li>
+        <li><a href="categories.html" class="block hover:text-blue-500 py-2 px-2 rounded-lg hover:bg-blue-50 transition duration-300 flex items-center">
+          <i class="fas fa-list mr-3"></i> Categories
+        </a></li>
+        <li><a href="search.html" class="block hover:text-blue-500 py-2 px-2 rounded-lg hover:bg-blue-50 transition duration-300 flex items-center">
+          <i class="fas fa-search mr-3"></i> Search
+        </a></li>
+        <li><a href="contact.html" class="block text-blue-500 font-semibold py-2 px-2 rounded-lg bg-blue-50 transition duration-300 flex items-center">
+          <i class="fas fa-envelope mr-3"></i> Contact
+        </a></li>
+      </ul>
+      <div class="mt-4 flex space-x-4">
+        <a href="login.html" class="w-full text-center border border-blue-500 py-2 rounded-full text-blue-500 hover:bg-blue-500 hover:text-white transition duration-300">
+          Login
+        </a>
+        <a href="signup.html" class="w-full text-center btn-primary text-white py-2 rounded-full hover:bg-blue-600 transition duration-300">
+          Signup
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="relative text-center py-32 md:py-40 bg-cover bg-center bg-fixed rounded-b-3xl overflow-hidden" style="background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');">
+    <div class="hero-overlay absolute inset-0"></div>
+    <div class="relative z-10 text-white px-6 max-w-4xl mx-auto" data-aos="zoom-in" data-aos-duration="1200">
+      <h1 class="text-4xl md:text-6xl font-extrabold mb-6 drop-shadow-lg">Get In Touch With Us</h1>
+      <p class="text-xl md:text-2xl mb-8 opacity-90 font-light">Have questions, feedback, or need assistance? We're here to help you with your virtual travel journey.</p>
+      <a href="#contact-form" class="px-8 py-3 btn-primary text-white rounded-full shadow-lg hover:scale-105 transition-transform duration-300 inline-flex items-center mx-auto">
+        <i class="fas fa-envelope mr-2"></i> Send us a Message
+      </a>
+    </div>
+    
+    <!-- Animated elements -->
+    <div class="floating absolute top-1/4 left-10 text-4xl text-white/30 hidden lg:block" style="animation-delay: 0s;">
+      <i class="fas fa-envelope"></i>
+    </div>
+    <div class="floating absolute top-1/3 right-16 text-2xl text-white/40 hidden lg:block" style="animation-delay: 1s;">
+      <i class="fas fa-phone"></i>
+    </div>
+    <div class="floating absolute bottom-1/4 left-20 text-3xl text-white/20 hidden lg:block" style="animation-delay: 2s;">
+      <i class="fas fa-map-marker-alt"></i>
+    </div>
+  </section>
+
+  <!-- Contact Information -->
+  <section class="py-16 px-6 bg-gradient-to-br from-white to-blue-50">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 text-blue-600 section-title" data-aos="fade-up">How Can We Help You?</h2>
+      
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="card-glass p-8 text-center" data-aos="fade-up" data-aos-delay="0">
+          <div class="contact-icon">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>
+          <h3 class="font-bold text-xl mb-3 text-blue-600">Visit Us</h3>
+          <p class="text-gray-600 mb-4">Rajkot,Gujarat<br>Pincode- 360005<br>India</p>
+          <a href="#" class="text-blue-500 hover:text-blue-600 font-medium inline-flex items-center">
+            Get Directions <i class="fas fa-arrow-right ml-2"></i>
+          </a>
+        </div>
+        
+        <div class="card-glass p-8 text-center" data-aos="fade-up" data-aos-delay="100">
+          <div class="contact-icon">
+            <i class="fas fa-phone"></i>
+          </div>
+          <h3 class="font-bold text-xl mb-3 text-blue-600">Call Us</h3>
+          <p class="text-gray-600 mb-4">+91 1234567890<br>Mon-Fri: 9am - 6pm<br>Sat: 10am - 4pm</p>
+          <a href="tel:+15551234567" class="text-blue-500 hover:text-blue-600 font-medium inline-flex items-center">
+            Call Now <i class="fas fa-phone ml-2"></i>
+          </a>
+        </div>
+        
+        <div class="card-glass p-8 text-center" data-aos="fade-up" data-aos-delay="200">
+          <div class="contact-icon">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <h3 class="font-bold text-xl mb-3 text-blue-600">Email Us</h3>
+          <p class="text-gray-600 mb-4">support@virtualtravel.com<br>info@virtualtravel.com<br>feedback@virtualtravel.com</p>
+          <a href="mailto:support@virtualtravel.com" class="text-blue-500 hover:text-blue-600 font-medium inline-flex items-center">
+            Email Now <i class="fas fa-envelope ml-2"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Form -->
+  <section class="py-16 px-6 bg-white" id="contact-form">
+    <div class="max-w-4xl mx-auto">
+      <div data-aos="fade-up">
+        <h2 class="text-3xl font-bold mb-6 text-blue-600 text-center">Send Us a Message</h2>
+        <p class="text-gray-600 mb-8 text-center">Have questions about our virtual tours or need assistance? Fill out the form below and our team will get back to you within 24 hours.</p>
+        
+        <form class="space-y-6">
+          <div class="grid md:grid-cols-2 gap-6">
+            <div>
+              <label for="firstName" class="form-label">First Name *</label>
+              <input type="text" id="firstName" class="form-input" placeholder="Your first name">
+            </div>
+            <div>
+              <label for="lastName" class="form-label">Last Name</label>
+              <input type="text" id="lastName" class="form-input" placeholder="Your last name">
+            </div>
+          </div>
+          
+          <div>
+            <label for="email" class="form-label">Email Address *</label>
+            <input type="email" id="email" class="form-input" placeholder="your.email@example.com">
+          </div>
+          
+          <div>
+            <label for="subject" class="form-label">Subject *</label>
+            <input type="text" id="subject" class="form-input" placeholder="What is this regarding?">
+          </div>
+          
+          <div>
+            <label for="message" class="form-label">Message *</label>
+            <textarea id="message" rows="5" class="form-input" placeholder="Tell us how we can help you..."></textarea>
+          </div>
+          
+          <button type="submit" class="w-full py-3 btn-primary text-white rounded-lg shadow-lg hover:scale-105 transition-transform duration-300">
+            Send Message <i class="fas fa-paper-plane ml-2"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Office Hours Section -->
+  <section class="py-16 px-6 bg-blue-50">
+    <div class="max-w-4xl mx-auto">
+      <div class="grid md:grid-cols-2 gap-12">
+        <div data-aos="fade-right">
+          <h2 class="text-3xl font-bold mb-6 text-blue-600">Office Hours</h2>
+          <div class="bg-white p-6 rounded-2xl shadow-md">
+            <ul class="space-y-4 text-gray-700">
+              <li class="flex justify-between">
+                <span class="font-medium">Monday - Friday:</span>
+                <span>9:00 AM - 6:00 PM</span>
+              </li>
+              <li class="flex justify-between">
+                <span class="font-medium">Saturday:</span>
+                <span>10:00 AM - 4:00 PM</span>
+              </li>
+              <li class="flex justify-between">
+                <span class="font-medium">Sunday:</span>
+                <span>Closed</span>
+              </li>
+            </ul>
+            
+            <div class="mt-6 pt-6 border-t border-blue-200">
+              <h3 class="font-bold text-xl mb-4 text-blue-600">Emergency Support</h3>
+              <p class="text-gray-700 mb-2">For urgent issues outside business hours:</p>
+              <a href="tel:+15551234567" class="text-blue-600 font-semibold hover:text-blue-700">+91 1234567890</a>
+            </div>
+          </div>
+        </div>
+        
+        <div data-aos="fade-left">
+          <h2 class="text-3xl font-bold mb-6 text-blue-600">Our Location</h2>
+          <div class="bg-white p-6 rounded-2xl shadow-md">
+            <div class="contact-icon mx-0 mb-4">
+              <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <h3 class="font-bold text-xl mb-3 text-blue-600">Virtual Travel Guide Headquarters</h3>
+            <p class="text-gray-600 mb-4">
+              Rajkot,Gujarat<br>
+              Pincode- 360005<br>
+              India
+            </p>
+            <a href="#" class="text-blue-500 hover:text-blue-600 font-medium inline-flex items-center">
+              Get Directions <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+ <!-- FAQ Section -->
+<section class="py-16 px-6 bg-gradient-to-br from-blue-50 to-indigo-50">
+  <div class="max-w-4xl mx-auto">
+    <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 text-blue-600 section-title" data-aos="fade-up">Frequently Asked Questions</h2>
+    
+    <div class="space-y-6">
+      <div class="card-glass p-6" data-aos="fade-up" data-aos-delay="0">
+        <h3 class="font-bold text-xl mb-3 text-blue-600 flex items-center">
+          <i class="fas fa-question-circle mr-3"></i> How do I access the virtual tours?
+        </h3>
+        <p class="text-gray-600">All our virtual tours are completely free to access. Simply browse our collection, select any tour that interests you, and start exploring immediately with no registration required.</p>
+      </div>
+      
+      <div class="card-glass p-6" data-aos="fade-up" data-aos-delay="100">
+        <h3 class="font-bold text-xl mb-3 text-blue-600 flex items-center">
+          <i class="fas fa-question-circle mr-3"></i> Do I need to create an account to use the virtual tours?
+        </h3>
+        <p class="text-gray-600">No account is necessary to enjoy our virtual tours. However, creating a free account allows you to save your favorite tours, create custom travel itineraries, and receive updates about new destinations.</p>
+      </div>
+      
+      <div class="card-glass p-6" data-aos="fade-up" data-aos-delay="200">
+        <h3 class="font-bold text-xl mb-3 text-blue-600 flex items-center">
+          <i class="fas fa-question-circle mr-3"></i> Can I suggest a destination for a virtual tour?
+        </h3>
+        <p class="text-gray-600">Absolutely! We're always looking for new destinations to feature. Please use our contact form to suggest locations you'd like to see, and our team will work on adding them to our collection.</p>
+      </div>
+      
+      <div class="card-glass p-6" data-aos="fade-up" data-aos-delay="300">
+        <h3 class="font-bold text-xl mb-3 text-blue-600 flex items-center">
+          <i class="fas fa-question-circle mr-3"></i> How often do you add new virtual tours?
+        </h3>
+        <p class="text-gray-600">We add new virtual tours every month. Subscribe to our newsletter to stay updated on the latest additions to our collection and never miss a new destination.</p>
+      </div>
+      
+      <div class="text-center mt-10" data-aos="fade-up">
+        <a href="#" class="text-blue-600 hover:text-blue-700 font-medium inline-flex items-center">
+          View All FAQs <i class="fas fa-arrow-right ml-2"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <!-- Newsletter -->
+  <section class="py-16 px-6 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4" data-aos="fade-up">Stay Connected With Us</h2>
+      <p class="mb-8 opacity-90" data-aos="fade-up">Subscribe to our newsletter for the latest virtual tours, travel tips, and exclusive offers</p>
+      
+      <form class="newsletter-form flex flex-col sm:flex-row gap-4 max-w-xl mx-auto" data-aos="zoom-in">
+        <input type="email" placeholder="Your email address" class="flex-grow p-4 border-0 rounded-l-lg sm:rounded-r-none rounded-t-lg sm:rounded-tl-lg rounded-b-lg sm:rounded-bl-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-800">
+        <button type="submit" class="px-6 py-4 btn-secondary rounded-r-lg sm:rounded-l-none rounded-t-lg sm:rounded-tr-lg rounded-b-lg sm:rounded-br-lg">
+          Subscribe <i class="fas fa-paper-plane ml-2"></i>
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-12 rounded-t-3xl">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid md:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400">Virtual Travel Guide</h3>
+          <p class="text-gray-400">Exploring the world from the comfort of your home through immersive virtual experiences.</p>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+          <ul class="space-y-2">
+            <li><a href="index.html" class="text-gray-400 hover:text-white transition">Home</a></li>
+            <li><a href="categories.html" class="text-gray-400 hover:text-white transition">Categories</a></li>
+            <li><a href="search.html" class="text-gray-400 hover:text-white transition">Search</a></li>
+            <li><a href="contact.html" class="text-white font-semibold">Contact</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Top Destinations</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Paris, France</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Taj Mahal, India</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Machu Picchu, Peru</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Great Wall, China</a></li>
+        </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Connect With Us</h4>
+          <div class="flex space-x-4 mb-4">
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-600 transition"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-pink-600 transition"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-400 transition"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-red-500 transition"><i class="fab fa-youtube"></i></a>
+          </div>
+          <p class="text-gray-400">Subscribe to our newsletter for updates</p>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+        <p>© 2025 Virtual Travel Guide. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top -->
+  <button id="backToTop" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-3 rounded-full shadow-lg hover:scale-110 transition">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <!-- AOS JS -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    // Initialize AOS
+    AOS.init({
+      duration: 800,
+      once: true,
+      offset: 100
+    });
+
+    // Mobile Menu
+    const menuBtn = document.getElementById("menuBtn");
+    const mobileMenu = document.getElementById("mobileMenu");
+    menuBtn.addEventListener("click", () => {
+      mobileMenu.classList.toggle("hidden");
+      mobileMenu.classList.toggle("flex");
+    });
+
+    // Form validation
+    const contactForm = document.querySelector('form');
+    if (contactForm) {
+      contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        // Clear previous error messages
+        clearErrorMessages();
+        
+        // Get form values
+        const firstName = document.getElementById('firstName').value.trim();
+        const lastName = document.getElementById('lastName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const subject = document.getElementById('subject').value.trim();
+        const message = document.getElementById('message').value.trim();
+        
+        // Validation flags
+        let isValid = true;
+        
+        // First Name validation
+        if (!firstName) {
+          showError('firstName', 'First name is required');
+          isValid = false;
+        } else if (firstName.length < 2) {
+          showError('firstName', 'First name must be at least 2 characters');
+          isValid = false;
+        } else if (!/^[a-zA-Z\s]+$/.test(firstName)) {
+          showError('firstName', 'First name can only contain letters and spaces');
+          isValid = false;
+        }
+        
+        // Last Name validation
+        if (lastName && !/^[a-zA-Z\s]+$/.test(lastName)) {
+          showError('lastName', 'Last name can only contain letters and spaces');
+          isValid = false;
+        }
+        
+        // Email validation
+        if (!email) {
+          showError('email', 'Email address is required');
+          isValid = false;
+        } else if (!isValidEmail(email)) {
+          showError('email', 'Please enter a valid email address');
+          isValid = false;
+        }
+        
+        // Subject validation
+        if (!subject) {
+          showError('subject', 'Subject is required');
+          isValid = false;
+        } else if (subject.length < 5) {
+          showError('subject', 'Subject must be at least 5 characters');
+          isValid = false;
+        }
+        
+        // Message validation
+        if (!message) {
+          showError('message', 'Message is required');
+          isValid = false;
+        } else if (message.length < 10) {
+          showError('message', 'Message must be at least 10 characters');
+          isValid = false;
+        } else if (message.length > 1000) {
+          showError('message', 'Message cannot exceed 1000 characters');
+          isValid = false;
+        }
+        
+        // If everything is valid, show success message
+        if (isValid) {
+          showSuccessMessage();
+          contactForm.reset();
+        }
+      });
+      
+      // Real-time validation as user types
+      const formInputs = contactForm.querySelectorAll('input, textarea');
+      formInputs.forEach(input => {
+        input.addEventListener('blur', () => {
+          validateField(input.id);
+        });
+        
+        // Clear error when user starts typing again
+        input.addEventListener('input', () => {
+          clearFieldError(input.id);
+        });
+      });
+    }
+
+    // Email validation function
+    function isValidEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+
+    // Show error message
+    function showError(fieldId, message) {
+      const field = document.getElementById(fieldId);
+      const formGroup = field.closest('div');
+      
+      // Add error styling to input
+      field.classList.add('border-red-500');
+      field.classList.remove('border-green-500');
+      
+      // Create or update error message
+      let errorElement = formGroup.querySelector('.error-message');
+      if (!errorElement) {
+        errorElement = document.createElement('p');
+        errorElement.className = 'error-message text-red-500 text-sm mt-1 flex items-center';
+        formGroup.appendChild(errorElement);
+      }
+      
+      errorElement.innerHTML = `<i class="fas fa-exclamation-circle mr-1"></i> ${message}`;
+    }
+
+    // Clear error message for a specific field
+    function clearFieldError(fieldId) {
+      const field = document.getElementById(fieldId);
+      if (field) {
+        const formGroup = field.closest('div');
+        const errorElement = formGroup.querySelector('.error-message');
+        
+        field.classList.remove('border-red-500', 'border-green-500');
+        
+        if (errorElement) {
+          errorElement.remove();
+        }
+      }
+    }
+
+    // Clear all error messages
+    function clearErrorMessages() {
+      const errorMessages = document.querySelectorAll('.error-message');
+      errorMessages.forEach(error => error.remove());
+      
+      const formInputs = document.querySelectorAll('.form-input');
+      formInputs.forEach(input => {
+        input.classList.remove('border-red-500', 'border-green-500');
+      });
+    }
+
+    // Validate individual field
+    function validateField(fieldId) {
+      const field = document.getElementById(fieldId);
+      const value = field.value.trim();
+      
+      clearFieldError(fieldId);
+      
+      switch(fieldId) {
+        case 'firstName':
+          if (!value) {
+            showError(fieldId, 'First name is required');
+          } else if (value.length < 2) {
+            showError(fieldId, 'First name must be at least 2 characters');
+          } else if (!/^[a-zA-Z\s]+$/.test(value)) {
+            showError(fieldId, 'First name can only contain letters and spaces');
+          } else {
+            field.classList.add('border-green-500');
+          }
+          break;
+          
+        case 'lastName':
+          if (value && !/^[a-zA-Z\s]+$/.test(value)) {
+            showError(fieldId, 'Last name can only contain letters and spaces');
+          } else if (value) {
+            field.classList.add('border-green-500');
+          }
+          break;
+          
+        case 'email':
+          if (!value) {
+            showError(fieldId, 'Email address is required');
+          } else if (!isValidEmail(value)) {
+            showError(fieldId, 'Please enter a valid email address');
+          } else {
+            field.classList.add('border-green-500');
+          }
+          break;
+          
+        case 'subject':
+          if (!value) {
+            showError(fieldId, 'Subject is required');
+          } else if (value.length < 5) {
+            showError(fieldId, 'Subject must be at least 5 characters');
+          } else {
+            field.classList.add('border-green-500');
+          }
+          break;
+          
+        case 'message':
+          if (!value) {
+            showError(fieldId, 'Message is required');
+          } else if (value.length < 10) {
+            showError(fieldId, 'Message must be at least 10 characters');
+          } else if (value.length > 1000) {
+            showError(fieldId, 'Message cannot exceed 1000 characters');
+          } else {
+            field.classList.add('border-green-500');
+          }
+          break;
+      }
+    }
+
+    // Show success message
+    function showSuccessMessage() {
+      // Create success message element
+      const successMessage = document.createElement('div');
+      successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg z-50 transform transition-transform duration-300 animate-bounce';
+      successMessage.innerHTML = `
+        <div class="flex items-center">
+          <i class="fas fa-check-circle mr-2"></i>
+          <span>Thank you! Your message has been sent successfully.</span>
+        </div>
+      `;
+      
+      document.body.appendChild(successMessage);
+      
+      // Remove message after 5 seconds
+      setTimeout(() => {
+        successMessage.remove();
+      }, 5000);
+    }
+
+    // Back to Top Button
+    const backToTop = document.getElementById("backToTop");
+    window.addEventListener("scroll", () => {
+      backToTop.style.display = window.scrollY > 300 ? "block" : "none";
+    });
+    backToTop.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!mobileMenu.contains(e.target) && !menuBtn.contains(e.target) && !mobileMenu.classList.contains('hidden')) {
+        mobileMenu.classList.add('hidden');
+      }
+    });
+
+    // Newsletter form validation
+    const newsletterForm = document.querySelector('.newsletter-form');
+    if (newsletterForm) {
+      newsletterForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const emailInput = newsletterForm.querySelector('input[type="email"]');
+        const email = emailInput.value.trim();
+        
+        if (!email) {
+          alert('Please enter your email address');
+          return;
+        }
+        
+        if (!isValidEmail(email)) {
+          alert('Please enter a valid email address');
+          return;
+        }
+        
+        // Show newsletter success message
+        const newsletterMessage = document.createElement('div');
+        newsletterMessage.className = 'fixed top-4 right-4 bg-blue-500 text-white p-4 rounded-lg shadow-lg z-50';
+        newsletterMessage.innerHTML = `
+          <div class="flex items-center">
+            <i class="fas fa-envelope mr-2"></i>
+            <span>Thank you for subscribing to our newsletter!</span>
+          </div>
+        `;
+        
+        document.body.appendChild(newsletterMessage);
+        newsletterForm.reset();
+        
+        setTimeout(() => {
+          newsletterMessage.remove();
+        }, 5000);
+      });
+    }
+  </script>
+
+</body>
+</html>

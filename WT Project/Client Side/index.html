@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Travel Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+        
+        html { 
+            scroll-behavior: smooth; 
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: #334155;
+        }
+        
+        #backToTop {
+            position: fixed; 
+            bottom: 20px; 
+            right: 20px; 
+            display: none; 
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        
+        .navbar-glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .card-glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .card-glass:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .hero-overlay {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(59, 130, 246, 0.75) 100%);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, #2563eb 100%);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary) 0%, #059669 100%);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+        }
+        
+        .search-box {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 50px;
+            overflow: hidden;
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .pulse {
+            animation: pulse 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+        
+        .section-title {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            width: 60%;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            bottom: -10px;
+            left: 20%;
+            border-radius: 2px;
+        }
+        
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+            font-size: 2rem;
+        }
+        
+        .destination-card {
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .destination-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+        }
+        
+        .destination-card img {
+            transition: transform 0.6s ease;
+        }
+        
+        .destination-card:hover img {
+            transform: scale(1.05);
+        }
+        
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+        
+        .newsletter-form {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        
+        .mobile-menu {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="navbar-glass p-4 sticky top-0 z-50 rounded-b-xl">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-green-500 hover:scale-105 transition-transform duration-300 flex items-center">
+                <i class="fas fa-globe-americas mr-2"></i> Virtual Travel Guide
+            </div>
+            <ul class="hidden md:flex space-x-8 text-gray-700 font-medium">
+                <li><a href="index.html" class="hover:text-blue-500 transition duration-300 relative group">Home
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
+                </a></li>
+                <li><a href="categories.html" class="hover:text-blue-500 transition duration-300 relative group">Categories
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
+                </a></li>
+                <li><a href="search.html" class="hover:text-blue-500 transition duration-300 relative group">Search
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
+                </a></li>
+                <li><a href="contact.html" class="hover:text-blue-500 transition duration-300 relative group">Contact
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
+                </a></li>
+            </ul>
+            <div class="hidden md:flex space-x-4">
+                <a href="login.html" class="px-4 py-2 border border-blue-500 rounded-full text-blue-500 hover:bg-blue-500 hover:text-white transition-all duration-300 flex items-center">
+                    <i class="fas fa-sign-in-alt mr-2"></i> Login
+                </a>
+                <a href="signup.html" class="px-4 py-2 btn-primary text-white rounded-full shadow hover:scale-105 transition-all duration-300 flex items-center">
+                    <i class="fas fa-user-plus mr-2"></i> Signup
+                </a>
+            </div>
+            <div class="md:hidden">
+                <button id="menuBtn" class="text-2xl text-blue-600">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="mobile-menu md:hidden hidden px-4 pt-2 pb-4 bg-white/95 shadow-lg rounded-xl mt-2 backdrop-blur-md">
+            <ul class="space-y-3 text-gray-700">
+                <li><a href="index.html" class="block hover:text-blue-500 py-2 px-2 rounded-lg hover:bg-blue-50 transition duration-300 flex items-center">
+                    <i class="fas fa-home mr-3"></i> Home
+                </a></li>
+                <li><a href="categories.html" class="block hover:text-blue-500 py-2 px-2 rounded-lg hover:bg-blue-50 transition duration-300 flex items-center">
+                    <i class="fas fa-list mr-3"></i> Categories
+                </a></li>
+                <li><a href="search.html" class="block hover:text-blue-500 py-2 px-2 rounded-lg hover:bg-blue-50 transition duration-300 flex items-center">
+                    <i class="fas fa-search mr-3"></i> Search
+                </a></li>
+                <li><a href="contact.html" class="block hover:text-blue-500 py-2 px-2 rounded-lg hover:bg-blue-50 transition duration-300 flex items-center">
+                    <i class="fas fa-envelope mr-3"></i> Contact
+                </a></li>
+            </ul>
+            <div class="mt-4 flex space-x-4">
+                <a href="login.html" class="w-full text-center border border-blue-500 py-2 rounded-full text-blue-500 hover:bg-blue-500 hover:text-white transition duration-300">
+                    Login
+                </a>
+                <a href="signup.html" class="w-full text-center btn-primary text-white py-2 rounded-full hover:bg-blue-600 transition duration-300">
+                    Signup
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative text-center py-32 md:py-40 bg-cover bg-center bg-fixed rounded-b-3xl overflow-hidden" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');">
+        <div class="hero-overlay absolute inset-0"></div>
+        <div class="relative z-10 text-white px-6 max-w-4xl mx-auto">
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 drop-shadow-lg">Explore the World Virtually</h1>
+            <p class="text-xl md:text-2xl mb-8 opacity-90 font-light">Discover amazing destinations and experiences from the comfort of your home with our immersive virtual tours</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="categories.html" class="px-8 py-3 btn-primary text-white rounded-full shadow-lg hover:scale-105 transition-transform duration-300 flex items-center justify-center">
+                    <i class="fas fa-compass mr-2"></i> Start Exploring
+                </a>
+                <a href="#features" class="px-8 py-3 bg-white/20 backdrop-blur-md text-white rounded-full border border-white/30 shadow-lg hover:bg-white/30 transition-all duration-300 flex items-center justify-center">
+                    <i class="fas fa-info-circle mr-2"></i> Learn More
+                </a>
+            </div>
+        </div>
+        
+        <!-- Animated elements -->
+        <div class="floating absolute top-1/4 left-10 text-4xl text-white/30 hidden lg:block" style="animation-delay: 0s;">
+            <i class="fas fa-mountain"></i>
+        </div>
+        <div class="floating absolute top-1/3 right-16 text-2xl text-white/40 hidden lg:block" style="animation-delay: 1s;">
+            <i class="fas fa-tree"></i>
+        </div>
+        <div class="floating absolute bottom-1/4 left-20 text-3xl text-white/20 hidden lg:block" style="animation-delay: 2s;">
+            <i class="fas fa-water"></i>
+        </div>
+        <div class="floating absolute bottom-1/3 right-24 text-xl text-white/30 hidden lg:block" style="animation-delay: 3s;">
+            <i class="fas fa-monument"></i>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 px-6 bg-gradient-to-br from-white to-blue-50">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 section-title">Why Choose Virtual Travel Guide?</h2>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="card-glass p-6 text-center">
+                    <div class="feature-icon text-blue-500">
+                        <i class="fas fa-vr-cardboard"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-3">Immersive Experience</h3>
+                    <p class="text-gray-600">360° views and virtual reality compatibility for realistic exploration.</p>
+                </div>
+                
+                <div class="card-glass p-6 text-center">
+                    <div class="feature-icon text-green-500">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-3">Global Destinations</h3>
+                    <p class="text-gray-600">Access thousands of locations worldwide from ancient ruins to modern cities.</p>
+                </div>
+                
+                <div class="card-glass p-6 text-center">
+                    <div class="feature-icon text-yellow-500">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-3">Cost Effective</h3>
+                    <p class="text-gray-600">Explore the world without the expenses of travel, accommodation, or tickets.</p>
+                </div>
+                
+                <div class="card-glass p-6 text-center">
+                    <div class="feature-icon text-purple-500">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-3">Time Efficient</h3>
+                    <p class="text-gray-600">Visit multiple destinations in a single day without long flights or delays.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section id="categories" class="py-20 px-6 bg-white">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 section-title">✨ Travel Categories</h2>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="card-glass p-6 text-center group">
+                    <div class="text-5xl mb-4 text-blue-500 group-hover:scale-110 transition-transform duration-300">🏔️</div>
+                    <h3 class="font-bold text-xl mb-3">Nature & Landscapes</h3>
+                    <p class="text-gray-600 mb-4">Relax in stunning landscapes, majestic mountains, and natural wonders from around the globe.</p>
+                    <a href="#" class="text-blue-500 hover:text-blue-600 font-medium inline-flex items-center">
+                        Explore <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+                
+                <div class="card-glass p-6 text-center group">
+                    <div class="text-5xl mb-4 text-amber-500 group-hover:scale-110 transition-transform duration-300">⚔️</div>
+                    <h3 class="font-bold text-xl mb-3">Historical Sites</h3>
+                    <p class="text-gray-600 mb-4">Walk through the history of the world's great civilizations and ancient architectural marvels.</p>
+                    <a href="#" class="text-blue-500 hover:text-blue-600 font-medium inline-flex items-center">
+                        Explore <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+                
+                <div class="card-glass p-6 text-center group">
+                    <div class="text-5xl mb-4 text-green-500 group-hover:scale-110 transition-transform duration-300">🧗</div>
+                    <h3 class="font-bold text-xl mb-3">Adventure</h3>
+                    <p class="text-gray-600 mb-4">Experience thrilling adventures, extreme sports, and exciting journeys virtually.</p>
+                    <a href="#" class="text-blue-500 hover:text-blue-600 font-medium inline-flex items-center">
+                        Explore <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="#categories" class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 inline-flex items-center">
+                    <i class="fas fa-eye mr-2"></i> View All Categories
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Destinations -->
+    <section class="py-20 px-6 bg-gradient-to-br from-blue-50 to-indigo-50">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 section-title">🌟 Popular Destinations</h2>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="destination-card bg-white">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1543783207-ec64e4d95325?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Paris" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-bold text-xl mb-2">Paris, France</h3>
+                        <p class="text-gray-600 mb-4">The city of lights, art, and romance awaits your virtual visit.</p>
+                        <a href="#" class="text-blue-500 hover:text-blue-600 font-medium inline-flex items-center">
+                            Explore Now <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="destination-card bg-white">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Taj Mahal" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-bold text-xl mb-2">Taj Mahal, India</h3>
+                        <p class="text-gray-600 mb-4">Experience the magnificence of this iconic symbol of love.</p>
+                        <a href="#" class="text-blue-500 hover:text-blue-600 font-medium inline-flex items-center">
+                            Explore Now <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="destination-card bg-white">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Machu Picchu" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-bold text-xl mb-2">Machu Picchu, Peru</h3>
+                        <p class="text-gray-600 mb-4">Explore the ancient Incan citadel nestled in the Andes Mountains.</p>
+                        <a href="#" class="text-blue-500 hover:text-blue-600 font-medium inline-flex items-center">
+                            Explore Now <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section id="search" class="py-20 px-6 bg-gradient-to-r from-blue-100 to-indigo-100 text-center rounded-3xl">
+        <div class="max-w-2xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6 text-blue-600">🔍 Search Destinations</h2>
+            <p class="text-gray-700 mb-8">Find your next virtual adventure from our extensive database of destinations</p>
+            
+            <div class="search-box flex justify-center mb-6">
+                <input type="text" id="searchBox" class="border-0 p-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Search places...">
+                <button class="bg-gradient-to-r from-blue-500 to-blue-600 px-6 text-white hover:scale-105 transition-transform duration-300">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            
+            <div id="searchResults" class="mt-6 text-gray-700 font-medium"></div>
+            
+            <div class="mt-8 flex flex-wrap justify-center gap-3">
+                <span class="px-3 py-1 bg-white/80 rounded-full text-sm text-gray-700 shadow-sm">Paris</span>
+                <span class="px-3 py-1 bg-white/80 rounded-full text-sm text-gray-700 shadow-sm">Tokyo</span>
+                <span class="px-3 py-1 bg-white/80 rounded-full text-sm text-gray-700 shadow-sm">Egypt</span>
+                <span class="px-3 py-1 bg-white/80 rounded-full text-sm text-gray-700 shadow-sm">Beaches</span>
+                <span class="px-3 py-1 bg-white/80 rounded-full text-sm text-gray-700 shadow-sm">Mountains</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-20 px-6 bg-white">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 section-title">What Travelers Say</h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="testimonial-card p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold mr-4">JD</div>
+                        <div>
+                            <h4 class="font-bold">John Doe</h4>
+                            <p class="text-gray-500 text-sm">Virtual Explorer</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">"The virtual tours are incredibly immersive! I felt like I was actually walking through the streets of Paris. Amazing experience!"</p>
+                    <div class="flex text-amber-400 mt-3">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-white font-bold mr-4">SM</div>
+                        <div>
+                            <h4 class="font-bold">Sarah Miller</h4>
+                            <p class="text-gray-500 text-sm">Travel Enthusiast</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">"As someone who can't travel often, this platform has been a blessing. The historical sites category is my favorite - so educational!"</p>
+                    <div class="flex text-amber-400 mt-3">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="py-16 px-6 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
+        <div class="max-w-3xl mx-auto text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Stay Updated with New Destinations</h2>
+            <p class="mb-8 opacity-90">Subscribe to our newsletter to receive updates on new virtual tours and exclusive content</p>
+            
+            <form class="newsletter-form flex flex-col sm:flex-row gap-4">
+                <input type="email" placeholder="Your email address" class="flex-grow p-4 border-0 rounded-l-lg sm:rounded-r-none rounded-t-lg sm:rounded-tl-lg rounded-b-lg sm:rounded-bl-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-800">
+                <button type="submit" class="px-6 py-4 btn-secondary rounded-r-lg sm:rounded-l-none rounded-t-lg sm:rounded-tr-lg rounded-b-lg sm:rounded-br-lg">
+                    Subscribe <i class="fas fa-paper-plane ml-2"></i>
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="py-20 px-6 bg-white text-center">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-blue-600 section-title">📩 Contact Us</h2>
+            <p class="text-gray-700 mb-8">Have questions or feedback? We'd love to hear from you!</p>
+            
+            <div class="grid md:grid-cols-2 gap-8 text-left mb-12">
+                <div class="card-glass p-6">
+                    <div class="flex items-start mb-4">
+                        <div class="text-blue-500 text-xl mr-4">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg">Email Us</h3>
+                            <a href="mailto:support@virtualtravel.com" class="text-blue-500 hover:text-blue-600 transition">support@virtualtravel.com</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-glass p-6">
+                    <div class="flex items-start mb-4">
+                        <div class="text-blue-500 text-xl mr-4">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg">Call Us</h3>
+                            <a href="tel:+911234567890" class="text-blue-500 hover:text-blue-600 transition">+91-1234567890</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <a href="#contact" class="px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 inline-flex items-center">
+                <i class="fas fa-paper-plane mr-2"></i> Send Message
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 rounded-t-3xl">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400">Virtual Travel Guide</h3>
+                    <p class="text-gray-400">Exploring the world from the comfort of your home through immersive virtual experiences.</p>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-400 hover:text-white transition">Home</a></li>
+                        <li><a href="#categories" class="text-gray-400 hover:text-white transition">Categories</a></li>
+                        <li><a href="#search" class="text-gray-400 hover:text-white transition">Search</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-white transition">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Top Destinations</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Paris, France</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Taj Mahal, India</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Machu Picchu, Peru</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Great Wall, China</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Connect With Us</h4>
+                    <div class="flex space-x-4 mb-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-600 transition"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-pink-600 transition"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-400 transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-red-500 transition"><i class="fab fa-youtube"></i></a>
+                    </div>
+                    <p class="text-gray-400">Subscribe to our newsletter for updates</p>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>© 2025 Virtual Travel Guide. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top -->
+    <button id="backToTop" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-3 rounded-full shadow-lg hover:scale-110 transition">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // Mobile Menu
+        const menuBtn = document.getElementById("menuBtn");
+        const mobileMenu = document.getElementById("mobileMenu");
+        menuBtn.addEventListener("click", () => {
+            mobileMenu.classList.toggle("hidden");
+            mobileMenu.classList.toggle("flex");
+        });
+
+        // Search function
+        const searchBox = document.getElementById("searchBox");
+        const searchResults = document.getElementById("searchResults");
+        
+        const destinations = [
+            { name: "Paris, France", keywords: ["paris", "france", "eiffel"] },
+            { name: "Taj Mahal, India", keywords: ["taj", "mahal", "india", "agra"] },
+            { name: "Machu Picchu, Peru", keywords: ["machu", "picchu", "peru"] },
+            { name: "Great Wall, China", keywords: ["great", "wall", "china"] },
+            { name: "Santorini, Greece", keywords: ["santorini", "greece"] },
+            { name: "Pyramids of Giza, Egypt", keywords: ["pyramid", "giza", "egypt"] }
+        ];
+
+        searchBox.addEventListener("input", () => {
+            const query = searchBox.value.toLowerCase();
+            if (query.length < 2) {
+                searchResults.innerHTML = "";
+                return;
+            }
+            
+            const matches = destinations.filter(dest => 
+                dest.keywords.some(keyword => keyword.includes(query)) || 
+                dest.name.toLowerCase().includes(query)
+            );
+            
+            if (matches.length > 0) {
+                searchResults.innerHTML = matches.map(dest => 
+                    `<div class="p-3 bg-white/80 rounded-lg shadow-sm mb-2 animate-pulse">✨ ${dest.name}</div>`
+                ).join('');
+            } else {
+                searchResults.innerHTML = '<div class="p-3 bg-white/80 rounded-lg shadow-sm">❌ No results found. Try different keywords.</div>';
+            }
+        });
+
+        // Back to Top Button
+        const backToTop = document.getElementById("backToTop");
+        window.addEventListener("scroll", () => {
+            backToTop.style.display = window.scrollY > 300 ? "block" : "none";
+        });
+        backToTop.addEventListener("click", () => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!mobileMenu.contains(e.target) && !menuBtn.contains(e.target) && !mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+
+        // Add animation classes on scroll
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.card-glass, .destination-card, .testimonial-card, .section-title');
+            
+            elements.forEach(element => {
+                const position = element.getBoundingClientRect();
+                
+                // If element is in viewport
+                if(position.top < window.innerHeight - 100) {
+                    element.classList.add('pulse');
+                    
+                    // Remove the listener after animation
+                    setTimeout(() => {
+                        element.classList.remove('pulse');
+                    }, 2000);
+                }
+            });
+        }
+
+        // Run on load and scroll
+        window.addEventListener('load', animateOnScroll);
+        window.addEventListener('scroll', animateOnScroll);
+    </script>
+
+</body>
+</html>

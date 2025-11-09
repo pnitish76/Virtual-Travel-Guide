@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Categories - Virtual Travel Guide</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/2f97fc9c53.js" crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --secondary: #10b981;
+      --accent: #f59e0b;
+      --dark: #1e293b;
+      --light: #f8fafc;
+    }
+    
+    html { 
+      scroll-behavior: smooth; 
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      color: #334155;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    #backToTop {
+      position: fixed; 
+      bottom: 20px; 
+      right: 20px; 
+      display: none; 
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+    
+    .navbar-glass {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .card-glass {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .card-glass:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    .hero-overlay {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(59, 130, 246, 0.75) 100%);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, #2563eb 100%);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+    }
+    
+    .btn-secondary {
+      background: linear-gradient(135deg, var(--secondary) 0%, #059669 100%);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+    }
+    
+    .search-box {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      border-radius: 50px;
+      overflow: hidden;
+    }
+    
+    .floating {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-12px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    .section-title {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 3rem;
+    }
+    
+    .section-title:after {
+      content: '';
+      position: absolute;
+      width: 60%;
+      height: 4px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      bottom: -10px;
+      left: 20%;
+      border-radius: 2px;
+    }
+    
+    .feature-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+      font-size: 2rem;
+    }
+    
+    .destination-card {
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.4s ease;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+      height: 100%;
+      background: white;
+    }
+    
+    .destination-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+    }
+    
+    .destination-card img {
+      transition: transform 0.6s ease;
+    }
+    
+    .destination-card:hover img {
+      transform: scale(1.05);
+    }
+    
+    .testimonial-card {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+    
+    .category-card {
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.4s ease;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+      background: white;
+      cursor: pointer;
+    }
+    
+    .category-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+    }
+    
+    .category-card img {
+      transition: transform 0.6s ease;
+    }
+    
+    .category-card:hover img {
+      transform: scale(1.05);
+    }
+    
+    .category-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-weight: 600;
+    }
+    
+    .category-card:hover .category-overlay {
+      opacity: 1;
+    }
+    
+    
+    #destinationsModal {
+      backdrop-filter: blur(5px);
+      padding: 1rem;
+    }
+    
+    #destinationsModal > div {
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .modal-header {
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 10;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    
+    
+    .error-message {
+      color: #ef4444;
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+      display: none;
+    }
+    
+    .input-error {
+      border-color: #ef4444 !important;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+    }
+    
+    .success-message {
+      color: #10b981;
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+      display: none;
+    }
+  
+    
+    @media (max-height: 600px) {
+      #destinationsModal > div {
+        max-height: 95vh;
+      }
+    }
+    
+    .destination-card h4 {
+      color: #1e293b;
+      font-weight: 700;
+    }
+    
+    .destination-card p {
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar-glass p-4 sticky top-0 z-50 rounded-b-xl">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-green-500 hover:scale-105 transition-transform duration-300 flex items-center">
+        <i class="fas fa-globe-americas mr-2"></i> Virtual Travel Guide
+      </div>
+      <ul class="hidden md:flex space-x-8 text-gray-700 font-medium">
+        <li><a href="index.html" class="hover:text-blue-500 transition duration-300 relative group">Home
+          <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
+        </a></li>
+        <li><a href="categories.html" class="text-blue-500 transition duration-300 relative group">Categories
+          <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500"></span>
+        </a></li>
+        <li><a href="search.html" class="hover:text-blue-500 transition duration-300 relative group">Search
+          <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
+        </a></li>
+        <li><a href="contact.html" class="hover:text-blue-500 transition duration-300 relative group">Contact
+          <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
+        </a></li>
+      </ul>
+      <div class="hidden md:flex space-x-4">
+        <a href="login.html" class="px-4 py-2 border border-blue-500 rounded-full text-blue-500 hover:bg-blue-500 hover:text-white transition-all duration-300 flex items-center">
+          <i class="fas fa-sign-in-alt mr-2"></i> Login
+        </a>
+        <a href="signup.html" class="px-4 py-2 btn-primary text-white rounded-full shadow hover:scale-105 transition-all duration-300 flex items-center">
+          <i class="fas fa-user-plus mr-2"></i> Signup
+        </a>
+      </div>
+      <div class="md:hidden">
+        <button id="menuBtn" class="text-2xl text-blue-600">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="md:hidden hidden px-4 pt-2 pb-4 bg-white/95 shadow-lg rounded-xl mt-2 backdrop-blur-md">
+      <ul class="space-y-3 text-gray-700">
+        <li><a href="index.html" class="block hover:text-blue-500 py-2 px-2 rounded-lg hover:bg-blue-50 transition duration-300 flex items-center">
+          <i class="fas fa-home mr-3"></i> Home
+        </a></li>
+        <li><a href="categories.html" class="block text-blue-500 font-semibold py-2 px-2 rounded-lg bg-blue-50 transition duration-300 flex items-center">
+          <i class="fas fa-list mr-3"></i> Categories
+        </a></li>
+        <li><a href="search.html" class="block hover:text-blue-500 py-2 px-2 rounded-lg hover:bg-blue-50 transition duration-300 flex items-center">
+          <i class="fas fa-search mr-3"></i> Search
+        </a></li>
+        <li><a href="contact.html" class="block hover:text-blue-500 py-2 px-2 rounded-lg hover:bg-blue-50 transition duration-300 flex items-center">
+          <i class="fas fa-envelope mr-3"></i> Contact
+        </a></li>
+      </ul>
+      <div class="mt-4 flex space-x-4">
+        <a href="login.html" class="w-full text-center border border-blue-500 py-2 rounded-full text-blue-500 hover:bg-blue-500 hover:text-white transition duration-300">
+          Login
+        </a>
+        <a href="signup.html" class="w-full text-center btn-primary text-white py-2 rounded-full hover:bg-blue-600 transition duration-300">
+          Signup
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="relative text-center py-32 md:py-40 bg-cover bg-center bg-fixed rounded-b-3xl overflow-hidden" style="background-image: url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80');">
+    <div class="hero-overlay absolute inset-0"></div>
+    <div class="relative z-10 text-white px-6 max-w-4xl mx-auto" data-aos="zoom-in" data-aos-duration="1200">
+      <h1 class="text-4xl md:text-6xl font-extrabold mb-6 drop-shadow-lg">Explore Our World</h1>
+      <p class="text-xl md:text-2xl mb-8 opacity-90 font-light">Discover amazing destinations worldwide organized by themes and experiences</p>
+      
+      <!-- Search Box -->
+      <form id="searchForm" class="max-w-xl mx-auto mb-8">
+        <div class="flex rounded-full overflow-hidden shadow-lg">
+          <input type="text" id="searchInput" placeholder="Search categories..." class="flex-grow p-4 border-0 focus:outline-none text-gray-800">
+          <button type="submit" class="bg-blue-600 px-6 text-white hover:bg-blue-700 transition-colors">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+        <div id="searchError" class="error-message mt-2 text-white text-center"></div>
+      </form>
+    </div>
+    
+    <!-- Animated elements -->
+    <div class="floating absolute top-1/4 left-10 text-4xl text-white/30 hidden lg:block" style="animation-delay: 0s;">
+      <i class="fas fa-mountain"></i>
+    </div>
+    <div class="floating absolute top-1/3 right-16 text-2xl text-white/40 hidden lg:block" style="animation-delay: 1s;">
+      <i class="fas fa-tree"></i>
+    </div>
+    <div class="floating absolute bottom-1/4 left-20 text-3xl text-white/20 hidden lg:block" style="animation-delay: 2s;">
+      <i class="fas fa-water"></i>
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <main class="flex-grow px-6 py-14">
+    <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 text-blue-600 section-title" data-aos="fade-up">✨ Explore Travel Categories ✨</h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      
+      <!-- Nature -->
+      <div class="category-card" data-aos="fade-up" data-aos-delay="0" onclick="showDestinations('Nature')">
+        <div class="h-56 overflow-hidden relative">
+          <img src="Nature.jpg" alt="Nature" class="w-full h-full object-cover" />
+          <div class="category-overlay">
+            <span class="text-lg font-semibold">Explore 25 Destinations</span>
+          </div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center mb-3">
+            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-3">
+              <i class="fas fa-mountain"></i>
+            </div>
+            <h3 class="text-xl font-bold text-blue-600">Nature</h3>
+          </div>
+          <p class="text-gray-600 mb-4">Discover scenic landscapes, lush forests, waterfalls, and peaceful retreats worldwide.</p>
+          <a href="#" class="text-blue-500 hover:text-blue-600 font-medium inline-flex items-center" onclick="event.preventDefault(); showDestinations('Nature')">
+            Explore Now <i class="fas fa-arrow-right ml-2"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Historical -->
+      <div class="category-card" data-aos="fade-up" data-aos-delay="100" onclick="showDestinations('Historical')">
+        <div class="h-56 overflow-hidden relative">
+          <img src="https://images.unsplash.com/photo-1564507592333-c60657eea523?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Historical" class="w-full h-full object-cover" />
+          <div class="category-overlay">
+            <span class="text-lg font-semibold">Explore 18 Destinations</span>
+          </div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center mb-3">
+            <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 mr-3">
+              <i class="fas fa-landmark"></i>
+            </div>
+            <h3 class="text-xl font-bold text-amber-600">Historical</h3>
+          </div>
+          <p class="text-gray-600 mb-4">Explore ancient ruins, famous landmarks, and rich cultural heritage from around the globe.</p>
+          <a href="#" class="text-blue-500 hover:text-blue-600 font-medium inline-flex items-center" onclick="event.preventDefault(); showDestinations('Historical')">
+            Explore Now <i class="fas fa-arrow-right ml-2"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Adventure -->
+      <div class="category-card" data-aos="fade-up" data-aos-delay="200" onclick="showDestinations('Adventure')">
+        <div class="h-56 overflow-hidden relative">
+          <img src="Adventure.jpg" alt="Adventure" class="w-full h-full object-cover" />
+          <div class="category-overlay">
+            <span class="text-lg font-semibold">Explore 22 Destinations</span>
+          </div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center mb-3">
+            <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 mr-3">
+              <i class="fas fa-hiking"></i>
+            </div>
+            <h3 class="text-xl font-bold text-green-600">Adventure</h3>
+          </div>
+          <p class="text-gray-600 mb-4">Embark on thrilling journeys like trekking, rafting, and extreme sports worldwide.</p>
+          <a href="#" class="text-blue-500 hover:text-blue-600 font-medium inline-flex items-center" onclick="event.preventDefault(); showDestinations('Adventure')">
+            Explore Now <i class="fas fa-arrow-right ml-2"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Beaches -->
+      <div class="category-card" data-aos="fade-up" data-aos-delay="0" onclick="showDestinations('Beaches')">
+        <div class="h-56 overflow-hidden relative">
+          <img src="Beaches.jpg" alt="Beaches" class="w-full h-full object-cover" />
+          <div class="category-overlay">
+            <span class="text-lg font-semibold">Explore 30 Destinations</span>
+          </div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center mb-3">
+            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-3">
+              <i class="fas fa-umbrella-beach"></i>
+            </div>
+            <h3 class="text-xl font-bold text-blue-600">Beaches</h3>
+          </div>
+          <p class="text-gray-600 mb-4">Relax at the world's most beautiful beaches with golden sand and clear water.</p>
+          <a href="#" class="text-blue-500 hover:text-blue-600 font-medium inline-flex items-center" onclick="event.preventDefault(); showDestinations('Beaches')">
+            Explore Now <i class="fas fa-arrow-right ml-2"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- City Tours -->
+      <div class="category-card" data-aos="fade-up" data-aos-delay="100" onclick="showDestinations('City Tours')">
+        <div class="h-56 overflow-hidden relative">
+          <img src="City Tours.jpg" alt="City" class="w-full h-full object-cover" />
+          <div class="category-overlay">
+            <span class="text-lg font-semibold">Explore 35 Destinations</span>
+          </div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center mb-3">
+            <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mr-3">
+              <i class="fas fa-city"></i>
+            </div>
+            <h3 class="text-xl font-bold text-purple-600">City Tours</h3>
+          </div>
+          <p class="text-gray-600 mb-4">Discover vibrant cities, modern architecture, shopping, and nightlife worldwide.</p>
+          <a href="#" class="text-blue-500 hover:text-blue-600 font-medium inline-flex items-center" onclick="event.preventDefault(); showDestinations('City Tours')">
+            Explore Now <i class="fas fa-arrow-right ml-2"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Wildlife -->
+      <div class="category-card" data-aos="fade-up" data-aos-delay="200" onclick="showDestinations('Wildlife')">
+        <div class="h-56 overflow-hidden relative">
+          <img src="Wildlife.jpg" alt="Wildlife" class="w-full h-full object-cover" />
+          <div class="category-overlay">
+            <span class="text-lg font-semibold">Explore 15 Destinations</span>
+          </div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center mb-3">
+            <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 mr-3">
+              <i class="fas fa-paw"></i>
+            </div>
+            <h3 class="text-xl font-bold text-red-600">Wildlife</h3>
+          </div>
+          <p class="text-gray-600 mb-4">Get close to nature with safaris, jungle treks, and national parks across the globe.</p>
+          <a href="#" class="text-blue-500 hover:text-blue-600 font-medium inline-flex items-center" onclick="event.preventDefault(); showDestinations('Wildlife')">
+            Explore Now <i class="fas fa-arrow-right ml-2"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Destinations Modal - Fixed Version with 3x2 Grid -->
+  <div id="destinationsModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center hidden p-4">
+    <div class="bg-white rounded-2xl w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
+      <div class="modal-header p-4 border-b border-gray-200 flex justify-between items-center">
+        <h3 id="modalTitle" class="text-xl md:text-2xl font-bold text-blue-600">Destinations</h3>
+        <button type="button" onclick="closeModal()" class="text-gray-500 hover:text-gray-700 text-2xl p-2">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div id="destinationsList" class="p-4 md:p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 overflow-y-auto">
+        <!-- Destinations will be populated here by JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Call to Action -->
+  <section class="py-16 px-6 bg-gradient-to-r from-blue-600 to-blue-500 text-white">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-3xl md:text-4xl font-bold mb-6">Can't Find What You're Looking For?</h2>
+      <p class="text-xl mb-8 opacity-90">We're constantly adding new destinations and categories. Let us know what you'd like to see!</p>
+      <a href="contact.html" class="px-8 py-3 bg-white text-blue-600 rounded-full shadow-lg hover:bg-gray-100 hover:scale-105 transition-all duration-300 inline-flex items-center mx-auto">
+        <i class="fas fa-envelope mr-2"></i> Suggest a Category
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-12 rounded-t-3xl">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid md:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400">Virtual Travel Guide</h3>
+          <p class="text-gray-400">Exploring the world from the comfort of your home through immersive virtual experiences.</p>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+          <ul class="space-y-2">
+            <li><a href="index.html" class="text-gray-400 hover:text-white transition">Home</a></li>
+            <li><a href="categories.html" class="text-white font-semibold">Categories</a></li>
+            <li><a href="search.html" class="text-gray-400 hover:text-white transition">Search</a></li>
+            <li><a href="contact.html" class="text-gray-400 hover:text-white transition">Contact</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Top Destinations</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Paris, France</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Taj Mahal, India</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Machu Picchu, Peru</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Great Wall, China</a></li>
+        </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Connect With Us</h4>
+          <div class="flex space-x-4 mb-4">
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-600 transition"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-pink-600 transition"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-400 transition"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-red-500 transition"><i class="fab fa-youtube"></i></a>
+          </div>
+          <p class="text-gray-400">Subscribe to our newsletter for updates</p>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+        <p>© 2025 Virtual Travel Guide. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top -->
+  <button id="backToTop" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-3 rounded-full shadow-lg hover:scale-110 transition">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <!-- AOS JS -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    // Initialize AOS
+    AOS.init({
+      duration: 800,
+      once: true,
+      offset: 100
+    });
+
+    // Mobile Menu
+    const menuBtn = document.getElementById("menuBtn");
+    const mobileMenu = document.getElementById("mobileMenu");
+    menuBtn.addEventListener("click", () => {
+      mobileMenu.classList.toggle("hidden");
+      mobileMenu.classList.toggle("flex");
+    });
+
+    // Back to Top Button
+    const backToTop = document.getElementById("backToTop");
+    window.addEventListener("scroll", () => {
+      backToTop.style.display = window.scrollY > 300 ? "block" : "none";
+    });
+    backToTop.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!mobileMenu.contains(e.target) && !menuBtn.contains(e.target) && !mobileMenu.classList.contains('hidden')) {
+        mobileMenu.classList.add('hidden');
+      }
+    });
+
+    // Validation utility functions
+    const ValidationUtils = {
+      // Check if a value is empty
+      isEmpty: (value) => {
+        return !value || value.trim() === '';
+      },
+      
+      // Validate email format
+      isValidEmail: (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+      },
+      
+      // Sanitize input to prevent XSS
+      sanitizeInput: (input) => {
+        const div = document.createElement('div');
+        div.textContent = input;
+        return div.innerHTML;
+      },
+      
+      // Show error message
+      showError: (element, message) => {
+        element.textContent = message;
+        element.style.display = 'block';
+        return false;
+      },
+      
+      // Hide error message
+      hideError: (element) => {
+        element.textContent = '';
+        element.style.display = 'none';
+        return true;
+      },
+      
+      // Show success message
+      showSuccess: (element, message) => {
+        element.textContent = message;
+        element.style.display = 'block';
+        setTimeout(() => {
+          element.style.display = 'none';
+        }, 5000);
+        return true;
+      },
+      
+      // Add error styling to input
+      addErrorStyle: (input) => {
+        input.classList.add('input-error');
+      },
+      
+      // Remove error styling from input
+      removeErrorStyle: (input) => {
+        input.classList.remove('input-error');
+      }
+    };
+
+    // Search form validation
+    const searchForm = document.getElementById('searchForm');
+    const searchInput = document.getElementById('searchInput');
+    const searchError = document.getElementById('searchError');
+    
+    if (searchForm) {
+      searchForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        // Reset previous errors
+        ValidationUtils.hideError(searchError);
+        ValidationUtils.removeErrorStyle(searchInput);
+        
+        // Get and sanitize input
+        const searchTerm = ValidationUtils.sanitizeInput(searchInput.value.trim());
+        
+        // Validate search term
+        if (ValidationUtils.isEmpty(searchTerm)) {
+          ValidationUtils.showError(searchError, 'Please enter a search term');
+          ValidationUtils.addErrorStyle(searchInput);
+          searchInput.focus();
+          return;
+        }
+        
+        if (searchTerm.length < 2) {
+          ValidationUtils.showError(searchError, 'Search term must be at least 2 characters long');
+          ValidationUtils.addErrorStyle(searchInput);
+          searchInput.focus();
+          return;
+        }
+        
+        // If validation passes, perform search
+        performSearch(searchTerm);
+      });
+    }
+    
+    // Perform search function
+    function performSearch(searchTerm) {
+      // In a real application, this would make an API call or filter results
+      console.log('Searching for:', searchTerm);
+      
+      // For demo purposes, show a message
+      alert(`Searching for: ${searchTerm}\n\nThis is a demo. In a real application, search results would be displayed here.`);
+      
+      // Clear the search input
+      searchInput.value = '';
+    }
+
+    // Sample destination data for worldwide destinations
+    const destinations = {
+      'Nature': [
+        { name: 'Grand Canyon, USA', image: 'https://images.unsplash.com/photo-1509316785289-025f5b846b35?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Massive canyon carved by the Colorado River over millions of years' },
+        { name: 'Northern Lights, Norway', image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Aurora borealis dancing across the Arctic sky' },
+        { name: 'Iguazu Falls, Argentina/Brazil', image: 'https://images.unsplash.com/photo-1588416499018-d8c621b1b3cf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'One of the world\'s largest and most impressive waterfall systems' },
+        { name: 'Zhangjiajie National Forest, China', image: 'https://images.unsplash.com/photo-1591081658710-4a226fcef6c6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Towering sandstone pillars that inspired Avatar\'s floating mountains' },
+        { name: 'Plitvice Lakes, Croatia', image: 'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Terraced lakes connected by waterfalls in stunning shades of blue and green' },
+        { name: 'Banff National Park, Canada', image: 'https://images.unsplash.com/photo-1582573618381-c9a77c31f6b6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Majestic Rocky Mountains with turquoise lakes and abundant wildlife' }
+      ],
+      'Historical': [
+        { name: 'Pyramids of Giza, Egypt', image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Ancient wonders and the only surviving of the Seven Wonders of the Ancient World' },
+        { name: 'Colosseum, Italy', image: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Iconic Roman amphitheater that hosted gladiator contests and public spectacles' },
+        { name: 'Machu Picchu, Peru', image: 'https://images.unsplash.com/photo-1580256081114-e2b2757f3993?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Inca citadel set high in the Andes Mountains, dating back to the 15th century' },
+        { name: 'Great Wall of China', image: 'https://images.unsplash.com/photo-1598940603846-a1edd0ef5274?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Series of fortifications built across the historical northern borders of China' },
+        { name: 'Petra, Jordan', image: 'https://images.unsplash.com/photo-1550353127-b0da3aeaa0ca?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Ancient city famous for its rock-cut architecture and water conduit system' },
+        { name: 'Angkor Wat, Cambodia', image: 'https://images.unsplash.com/photo-1588416499018-d8c621b1b3cf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Largest religious monument in the world, originally constructed as a Hindu temple' }
+      ],
+      'Adventure': [
+        { name: 'Queenstown, New Zealand', image: 'https://images.unsplash.com/photo-1580256081114-e2b2757f3993?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Adventure capital of the world with bungee jumping, skydiving, and jet boating' },
+        { name: 'Interlaken, Switzerland', image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Paragliding, canyoning, and skiing in the heart of the Swiss Alps' },
+        { name: 'Moab, Utah, USA', image: 'https://images.unsplash.com/photo-1598940603846-a1edd0ef5274?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'World-class rock climbing, mountain biking, and off-roading in red rock country' },
+        { name: 'Costa Rica', image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Ziplining through cloud forests, whitewater rafting, and volcano hiking' },
+        { name: 'Nepal Himalayas', image: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Trekking to Everest Base Camp or Annapurna Circuit in the world\'s highest mountains' },
+        { name: 'Victoria Falls, Zambia/Zimbabwe', image: 'https://images.unsplash.com/photo-1582573618381-c9a77c31f6b6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Whitewater rafting on the Zambezi River and swimming in Devil\'s Pool at the edge of the falls' }
+      ],
+      'Beaches': [
+        { name: 'Bora Bora, French Polynesia', image: 'https://images.unsplash.com/photo-1598940603846-a1edd0ef5274?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Turquoise lagoon and overwater bungalows in the South Pacific' },
+        { name: 'Maldives', image: 'https://images.unsplash.com/photo-1588416499018-d8c621b1b3cf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Pristine white sand beaches and crystal-clear waters with abundant marine life' },
+        { name: 'Whitehaven Beach, Australia', image: 'https://images.unsplash.com/photo-1598880799703-9915560ab10d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: '7km stretch of silica sand that doesn\'t retain heat, located in the Whitsundays' },
+        { name: 'Navagio Beach, Greece', image: 'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Secluded cove with a shipwreck, accessible only by boat with dramatic cliffs' },
+        { name: 'Copacabana Beach, Brazil', image: 'https://images.unsplash.com/photo-1591081658710-4a226fcef6c6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Famous 4km stretch in Rio de Janeiro with vibrant culture and stunning scenery' },
+        { name: 'Anse Source d\'Argent, Seychelles', image: 'https://images.unsplash.com/photo-1550353127-b0da3aeaa0ca?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Granite boulders, shallow turquoise waters, and powdery white sand' }
+      ],
+      'City Tours': [
+        { name: 'Paris, France', image: 'https://images.unsplash.com/photo-1582573618381-c9a77c31f6b6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'The City of Light with iconic Eiffel Tower, Louvre, and charming cafes' },
+        { name: 'Tokyo, Japan', image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Futuristic technology meets traditional culture in this bustling metropolis' },
+        { name: 'New York City, USA', image: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'The Big Apple with Broadway, Central Park, and iconic skyline' },
+        { name: 'Rome, Italy', image: 'https://images.unsplash.com/photo-1580256081114-e2b2757f3993?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Eternal City with ancient ruins, Renaissance art, and incredible cuisine' },
+        { name: 'Barcelona, Spain', image: 'https://images.unsplash.com/photo-1598880799703-9915560ab10d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Gaudi architecture, vibrant markets, and beautiful Mediterranean beaches' },
+        { name: 'Marrakech, Morocco', image: 'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Vibrant souks, historic palaces, and the bustling Jemaa el-Fnaa square' }
+      ],
+      'Wildlife': [
+        { name: 'Serengeti National Park, Tanzania', image: 'https://images.unsplash.com/photo-1550353127-b0da3aeaa0ca?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Famous for the Great Migration of wildebeest and zebra' },
+        { name: 'Galapagos Islands, Ecuador', image: 'https://images.unsplash.com/photo-1591081658710-4a226fcef6c6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Unique wildlife that inspired Darwin\'s theory of evolution' },
+        { name: 'Amazon Rainforest, Brazil', image: 'https://images.unsplash.com/photo-1588416499018-d8c621b1b3cf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Largest tropical rainforest with incredible biodiversity' },
+        { name: 'Yellowstone National Park, USA', image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'First national park in the world with geysers and diverse wildlife' },
+        { name: 'Great Barrier Reef, Australia', image: 'https://images.unsplash.com/photo-1598940603846-a1edd0ef5274?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'World\'s largest coral reef system with incredible marine biodiversity' },
+        { name: 'Masai Mara, Kenya', image: 'https://images.unsplash.com/photo-1582573618381-c9a77c31f6b6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80', description: 'Spectacular wildlife viewing with the Big Five and the Great Migration' }
+      ]
+    };
+
+    // Function to show destinations for a category
+    function showDestinations(category) {
+      // Validate category parameter
+      if (!category || typeof category !== 'string') {
+        console.error('Invalid category parameter');
+        return;
+      }
+      
+      const modal = document.getElementById('destinationsModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const destinationsList = document.getElementById('destinationsList');
+      
+      // Validate DOM elements exist
+      if (!modal || !modalTitle || !destinationsList) {
+        console.error('Required DOM elements not found');
+        return;
+      }
+      
+      // Set modal title with sanitized input
+      modalTitle.textContent = `${ValidationUtils.sanitizeInput(category)} Destinations Worldwide`;
+      
+      // Clear previous destinations
+      destinationsList.innerHTML = '';
+      
+      // Add destinations to the modal
+      if (destinations[category]) {
+        destinations[category].forEach(destination => {
+          // Validate destination data
+          if (!destination.name || !destination.image || !destination.description) {
+            console.warn('Invalid destination data:', destination);
+            return;
+          }
+          
+          const destinationCard = document.createElement('div');
+          destinationCard.className = 'destination-card bg-white rounded-lg overflow-hidden shadow-md flex flex-col';
+          destinationCard.innerHTML = `
+            <img src="${ValidationUtils.sanitizeInput(destination.image)}" alt="${ValidationUtils.sanitizeInput(destination.name)}" class="w-full h-48 object-cover">
+            <div class="p-4 flex flex-col flex-grow">
+              <h4 class="font-bold text-lg mb-2">${ValidationUtils.sanitizeInput(destination.name)}</h4>
+              <p class="text-gray-600 flex-grow">${ValidationUtils.sanitizeInput(destination.description)}</p>
+            </div>
+          `;
+          destinationsList.appendChild(destinationCard);
+        });
+      } else {
+        destinationsList.innerHTML = '<p class="text-gray-600 col-span-3 text-center py-8">No destinations found for this category.</p>';
+      }
+      
+      // Show the modal
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden'; // Prevent scrolling
+    }
+
+    // Function to close the modal
+    function closeModal() {
+      const modal = document.getElementById('destinationsModal');
+      
+      // Validate modal exists
+      if (!modal) {
+        console.error('Modal element not found');
+        return;
+      }
+      
+      modal.classList.add('hidden');
+      document.body.style.overflow = 'auto'; // Re-enable scrolling
+    }
+
+    // Close modal when clicking outside of it
+    const modalElement = document.getElementById('destinationsModal');
+    if (modalElement) {
+      modalElement.addEventListener('click', (e) => {
+        if (e.target.id === 'destinationsModal') {
+          closeModal();
+        }
+      });
+    }
+
+    // Add keyboard event listener for ESC key to close modal
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    });
+  </script>
+
+</body>
+</html>
